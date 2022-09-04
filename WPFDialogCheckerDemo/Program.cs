@@ -12,11 +12,19 @@ namespace WPFDialogChecker
         {
             WPFDialogChecker wpfDialogChecker = new WPFDialogChecker();
             wpfDialogChecker.NodeProgressChanged += SubNodeProgressChanged;
+            bool? logicalResult;
             try
             {
-                wpfDialogChecker.Run("xyz", new TreeParameters("MainTree", null), new TreeEvent("Testknoten", "Testknoten", "Testknoten", "Testknoten",
-                    "Testknoten", null, NodeLogicalState.None, null, null));
-                MessageBox.Show(String.Format("Result: {0}", ((wpfDialogChecker.ReturnObject) ?? "null").ToString()));
+                // logicalResult = wpfDialogChecker.Run("Exception", new TreeParameters("MainTree", null), new TreeEvent("Testknoten", "Testknoten", "Testknoten",
+                //     "Testknoten", "Testknoten", null, NodeLogicalState.None, null, null));
+                //logicalResult = wpfDialogChecker.Run("null", new TreeParameters("MainTree", null), new TreeEvent("Testknoten", "Testknoten", "Testknoten",
+                //     "Testknoten", "Testknoten", null, NodeLogicalState.None, null, null));
+                //logicalResult = wpfDialogChecker.Run("true", new TreeParameters("MainTree", null), new TreeEvent("Testknoten", "Testknoten", "Testknoten",
+                //     "Testknoten","Testknoten", null, NodeLogicalState.None, null, null));
+                logicalResult = wpfDialogChecker.Run("---", new TreeParameters("MainTree", null), new TreeEvent("Testknoten", "Testknoten", "Testknoten",
+                     "Testknoten", "Testknoten", null, NodeLogicalState.None, null, null));
+                MessageBox.Show(String.Format("Result: {0}, ReturnObject: {1}", logicalResult.ToString(),
+                    ((wpfDialogChecker.ReturnObject) ?? "null").ToString()));
             }
             catch (Exception ex)
             {

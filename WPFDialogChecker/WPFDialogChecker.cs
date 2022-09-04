@@ -66,10 +66,37 @@ namespace WPFDialogChecker
         public bool? Run(object checkerParameters, TreeParameters treeParameters, TreeEvent source)
         {
             // Parameterübernahme
-            string callingNodeId = source.NodeName; ;
-            if (source.Results != null && source.Results.Count > 0)
+            string callingNodeId = source.NodeName;
+            bool isFirstRun = true;
+            if (source.Results != null && source.Results.Count > 0 && source.Results.ContainsKey(callingNodeId) && source.Results[callingNodeId] != null)
             {
-                Result lastResult = source.Results.First().Value;
+                isFirstRun = false;
+                // Result lastResult = source.Results[callingNodeId];
+            }
+            ApplicationException applicationException = null;
+            bool? logicalResult = null;
+            bool showDialog = true;
+            string para = checkerParameters.ToString().Trim().ToLower();
+            if ((new string[] { "exception", "true", "false", "null" }).Contains(para))
+            {
+                switch (para)
+                {
+                    case "exception":
+                        applicationException = new ApplicationException("User clicked on 'Exception'.");
+                        break;
+                    case "true":
+                        logicalResult = true;
+                        break;
+                    case "false":
+                        logicalResult = false;
+                        break;
+                    default:
+                        break;
+                }
+                if (isFirstRun)
+                {
+                    showDialog = false;
+                }
             }
 
             // Die Haupt-Klasse der Geschäftslogik
@@ -89,41 +116,60 @@ namespace WPFDialogChecker
             this.ReturnObject = null;
             this.OnNodeProgressChanged(String.Format("{0}", this.GetType().Name), 100, 50, ItemsTypes.items);
 
-            this._mainWindow.WindowStartupLocation = System.Windows.WindowStartupLocation.Manual;
-            Point parentViewAbsoluteScreenPosition = treeParameters.GetParentViewAbsoluteScreenPosition();
-            this._mainWindow.Left = parentViewAbsoluteScreenPosition.X - this._mainWindow.ActualWidth / 2;
-            this._mainWindow.Top = parentViewAbsoluteScreenPosition.Y - this._mainWindow.ActualHeight / 2;
+            if (showDialog)
+            {
+                this._mainWindow.WindowStartupLocation = System.Windows.WindowStartupLocation.Manual;
+                Point parentViewAbsoluteScreenPosition = treeParameters.GetParentViewAbsoluteScreenPosition();
+                this._mainWindow.Left = parentViewAbsoluteScreenPosition.X - this._mainWindow.ActualWidth / 2;
+                this._mainWindow.Top = parentViewAbsoluteScreenPosition.Y - this._mainWindow.ActualHeight / 2;
+                this._mainWindow.ShowDialog();
+                if (this._mainBusinessLogicViewModel.LastException != null)
+                {
+                    applicationException = this._mainBusinessLogicViewModel.LastException;
+                }
+                else
+                {
+                    logicalResult = this._mainBusinessLogic.LogicalState;
+                }
+            }
 
-            this._mainWindow.ShowDialog();
             this.OnNodeProgressChanged(String.Format("{0}", this.GetType().Name), 100, 100, ItemsTypes.items);
-            if (this._mainBusinessLogicViewModel.LastException != null)
+
+            if (applicationException != null)
             {
                 InfoController.Say("User clicked Exp");
-                throw this._mainBusinessLogicViewModel.LastException;
+                throw applicationException;
             }
-            if (this._mainWindow.DialogResult.HasValue && this._mainWindow.DialogResult.Value == true)
+            if (logicalResult == true)
             {
-                InfoController.Say("User clicked True");
+                InfoController.Say("User clicked true");
             }
             else
             {
-                InfoController.Say("User clicked False");
+                if (logicalResult == false)
+                {
+                    InfoController.Say("User clicked false");
+                }
+                else
+                {
+                    InfoController.Say("User clicked null");
+                }
             }
-            this.ReturnObject = checkerParameters.ToString();
-            bool? rtn = this._mainBusinessLogic.LogicalState;
+            this.ReturnObject = "Parameter: " + checkerParameters.ToString();
 
             this._mainWindow = null;
             this._mainWindowViewModel = null;
             this._mainBusinessLogicViewModel = null;
             this._mainBusinessLogic = null;
 
-            return rtn;
+            return logicalResult;
         }
 
         private View.MainWindow _mainWindow;
         private Model.MainBusinessLogic _mainBusinessLogic;
         private ViewModel.MainBusinessLogicViewModel _mainBusinessLogicViewModel;
         private ViewModel.MainWindowViewModel _mainWindowViewModel;
+        private bool _isFirstRun;
 
         private void OnNodeProgressChanged(string itemsName, int countAll, int countSucceeded, ItemsTypes itemsType)
         {
