@@ -169,7 +169,6 @@ namespace WPFDialogChecker
         private Model.MainBusinessLogic _mainBusinessLogic;
         private ViewModel.MainBusinessLogicViewModel _mainBusinessLogicViewModel;
         private ViewModel.MainWindowViewModel _mainWindowViewModel;
-        private bool _isFirstRun;
 
         private void OnNodeProgressChanged(string itemsName, int countAll, int countSucceeded, ItemsTypes itemsType)
         {
