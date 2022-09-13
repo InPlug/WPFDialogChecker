@@ -1,16 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
 using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
-using System.IO;
 using NetEti.Globals;
 using NetEti.ApplicationControl;
-using System.Threading.Tasks;
 using Vishnu.Interchange;
-using System.Threading;
 using WPFDialogChecker.ViewModel;
 
 namespace WPFDialogChecker

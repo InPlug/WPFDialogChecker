@@ -1,9 +1,4 @@
 ﻿using NetEti.ApplicationEnvironment;
-using System.Collections.Generic;
-using System.IO;
-using System;
-using NetEti.Globals;
-using System.Text.RegularExpressions;
 
 namespace WPFDialogChecker
 {
