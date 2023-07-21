@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using View;
 
 namespace WPFDialogChecker.View
 {
@@ -39,7 +40,7 @@ namespace WPFDialogChecker.View
         /// Setzt die Fenstergröße unter Berücksichtigung von Maximalgrenzen auf die
         /// Höhe und Breite des Inhalts und die Property SizeToContent auf WidthAndHeight.
         /// </summary>
-        public void InitWindowSize(object parameter)
+        public void InitWindowSize(object? parameter)
         {
             this.MaxWidth = System.Windows.SystemParameters.VirtualScreenWidth; //MAXWIDTH;
             this.MaxHeight = System.Windows.SystemParameters.VirtualScreenHeight; //MAXHEIGTH;

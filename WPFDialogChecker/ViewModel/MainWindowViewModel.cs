@@ -40,7 +40,7 @@ namespace WPFDialogChecker.ViewModel
         /// Setzt die Fenstergröße unter Berücksichtigung von Maximalgrenzen auf die
         /// Höhe und Breite des Inhalts und die Property SizeToContent auf WidthAndHeight.
         /// </summary>
-        public ICommand InitSizeCommand { get { return this._initSizeRelayCommand; } }
+        public ICommand? InitSizeCommand { get { return this._initSizeRelayCommand; } }
 
         /// <summary>
         /// Konstruktor - übernimmt das mainBusinessLogicViewModel und eine Methode des
@@ -48,9 +48,9 @@ namespace WPFDialogChecker.ViewModel
         /// </summary>
         /// <param name="mainBusinessLogicViewModel">ViewModel für den LogicalTaskTree.</param>
         /// <param name="initWindowSize">Restauriert die Fenstergröße abhängig vom Fensterinhalt.</param>
-        public MainWindowViewModel(MainBusinessLogicViewModel mainBusinessLogicViewModel, Action<object> initWindowSize)
+        public MainWindowViewModel(MainBusinessLogicViewModel mainBusinessLogicViewModel, Action<object?> initWindowSize)
         {
-            this.MainBusinessLogicViewModel_ = mainBusinessLogicViewModel;
+            this._mainBusinessLogicViewModel_ = mainBusinessLogicViewModel;
             this._initSizeRelayCommand = new RelayCommand(initWindowSize);
         }
 
@@ -58,7 +58,7 @@ namespace WPFDialogChecker.ViewModel
 
         #region private members
 
-        private RelayCommand _initSizeRelayCommand;
+        private RelayCommand? _initSizeRelayCommand;
         private MainBusinessLogicViewModel _mainBusinessLogicViewModel_;
 
         #endregion private members

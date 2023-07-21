@@ -31,7 +31,7 @@ namespace WPFDialogChecker.ViewModel
         {
             get
             {
-                return this.CallingNodeId + " - " + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
+                return this.CallingNodeId + " - " + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version?.ToString();
             }
             set
             {
@@ -76,7 +76,7 @@ namespace WPFDialogChecker.ViewModel
         /// <summary>
         /// Gesetzte Test-Exception oder null.
         /// </summary>
-        public ApplicationException LastException
+        public ApplicationException? LastException
         {
             get
             {
@@ -127,7 +127,7 @@ namespace WPFDialogChecker.ViewModel
             this._root = root;
             this._uIMain = uiMain;
             this.LogicalState = null;
-            this.LastException = null;
+            this._lastException = null;
             //this._nodeId = "WPF"
 
             if (!System.ComponentModel.DesignerProperties.GetIsInDesignMode(new DependencyObject()))
@@ -156,11 +156,11 @@ namespace WPFDialogChecker.ViewModel
         private RelayCommand _cmdExpMainBusinessLogicRelayCommand;
         private RelayCommand _btnBreakMainBusinessLogicRelayCommand;
         private FrameworkElement _uIMain { get; set; }
-        private System.Windows.Threading.Dispatcher _uIDispatcher { get; set; }
+        private System.Windows.Threading.Dispatcher? _uIDispatcher { get; set; }
         private bool? _logicalState;
-        private ApplicationException _lastException;
+        private ApplicationException? _lastException;
 
-        private MainBusinessLogicViewModel() { }
+        // private MainBusinessLogicViewModel() { }
 
         private void mainBusinessLogicStateChanged(object sender, State state)
         {
@@ -179,13 +179,13 @@ namespace WPFDialogChecker.ViewModel
             {
                 Thread.Sleep(1000);
                 if (this.Dispatcher.CheckAccess())
-                    (this._uIMain as Window).DialogResult = true;
+                    ((Window)this._uIMain).DialogResult = true;
                 else
-                    this.Dispatcher.Invoke(DispatcherPriority.Normal, new ThreadStart(new Action(() => { (this._uIMain as Window).DialogResult = true; })));
+                    this.Dispatcher.Invoke(DispatcherPriority.Normal, new ThreadStart(new Action(() => { ((Window)this._uIMain).DialogResult = true; })));
             }));
         }
 
-        private void cmdTrueMainBusinessLogicExecute(object parameter)
+        private void cmdTrueMainBusinessLogicExecute(object? parameter)
         {
             this._lastException = null;
             this._root.SetLogicalStateToTrue();
@@ -197,7 +197,7 @@ namespace WPFDialogChecker.ViewModel
             return (this._root.ModelState & State.CanStart) > 0;
         }
 
-        private void cmdFalseMainBusinessLogicExecute(object parameter)
+        private void cmdFalseMainBusinessLogicExecute(object? parameter)
         {
             this._lastException = null;
             this._root.SetLogicalStateToFalse();
@@ -209,7 +209,7 @@ namespace WPFDialogChecker.ViewModel
             return (this._root.ModelState & State.CanStart) > 0;
         }
 
-        private void cmdNullMainBusinessLogicExecute(object parameter)
+        private void cmdNullMainBusinessLogicExecute(object? parameter)
         {
             this.LastException = null;
             this._root.SetLogicalStateToNull();
@@ -221,7 +221,7 @@ namespace WPFDialogChecker.ViewModel
             return (this._root.ModelState & State.CanStart) > 0;
         }
 
-        private void cmdExpMainBusinessLogicExecute(object parameter)
+        private void cmdExpMainBusinessLogicExecute(object? parameter)
         {
             this._root.SetLogicalStateToNull();
             this.LastException = new ApplicationException("Test-Exception");
@@ -233,7 +233,7 @@ namespace WPFDialogChecker.ViewModel
             return (this._root.ModelState & State.CanStart) > 0;
         }
 
-        private void breakMainBusinessLogicExecute(object parameter)
+        private void breakMainBusinessLogicExecute(object? parameter)
         {
             this._root.Break();
         }

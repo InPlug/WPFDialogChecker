@@ -40,7 +40,7 @@ namespace WPFDialogChecker.Model
         /// <summary>
         /// Wird aufgerufen, wenn sich der Verarbeitungszustand eines Knotens geändert hat.
         /// </summary>
-        public event StateChangedEventHandler StateChanged;
+        public event StateChangedEventHandler? StateChanged;
 
         /// <summary>
         /// True, false oder null.
@@ -130,7 +130,7 @@ namespace WPFDialogChecker.Model
         {
             if (StateChanged != null)
             {
-                Statistics.Inc("LogicalNode.State.Get from LogicalNote.OnStateChanged");
+                // Statistics.Inc("LogicalNode.State.Get from LogicalNote.OnStateChanged");
                 StateChanged(this, this.ModelState);
             }
         }
