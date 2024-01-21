@@ -1,5 +1,5 @@
 ﻿using System.Windows;
-using View;
+using ViewHelper;
 
 namespace WPFDialogChecker.View
 {
@@ -16,7 +16,7 @@ namespace WPFDialogChecker.View
         /// <summary>
         /// Konstruktor des Haupt-Fensters.
         /// </summary>
-        public MainWindow()
+        public MainWindow(Point parentViewAbsoluteScreenPosition)
         {
             /* Der nachfolgende Lock wurde erforderlich, da ansonsten (bei sehr großen Jobs mit sehr vielen Controls) folgender Fehler auftreten kann:
              * Letztes Ergebnis: Node334: System.NullReferenceException: Der Objektverweis wurde nicht auf eine Objektinstanz festgelegt.
@@ -32,8 +32,18 @@ namespace WPFDialogChecker.View
              * Weiterer Hinweis: LockHelper muss zwingend eine Klasse dieser Assembly sein, Auslagerung in NetEti.Globals führt bei großen Jobs zu Ladefehlern!
             */
             lock (LockHelper.Instance)
+            {
                 InitializeComponent();
-            this._contentRendered = false;
+                this._parentViewAbsoluteScreenPosition = parentViewAbsoluteScreenPosition;
+                this._contentRendered = false;
+                this.Loaded += MainWindow_Loaded; // Funktioniert nicht aus XAML heraus!
+            }
+        }
+
+        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            this.Left = this._parentViewAbsoluteScreenPosition.X - this.ActualWidth / 2;
+            this.Top = this._parentViewAbsoluteScreenPosition.Y - this.ActualHeight / 2;
         }
 
         /// <summary>
@@ -67,6 +77,7 @@ namespace WPFDialogChecker.View
         #region private members
 
         private bool _contentRendered;
+        private Point _parentViewAbsoluteScreenPosition;
 
         private void Window_ContentRendered(object sender, System.EventArgs e)
         {
@@ -78,5 +89,10 @@ namespace WPFDialogChecker.View
 
         #endregion private members
 
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            this.Left = this._parentViewAbsoluteScreenPosition.X - this.ActualWidth / 2;
+            this.Top = this._parentViewAbsoluteScreenPosition.Y - this.ActualHeight / 2;
+        }
     }
 }

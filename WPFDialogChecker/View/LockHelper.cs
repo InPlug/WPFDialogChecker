@@ -1,4 +1,4 @@
-﻿namespace View
+﻿namespace ViewHelper
 {
     /// <summary>
     /// Leeres statisches Singleton, kann für Locking verwendet werden.
