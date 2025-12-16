@@ -21,7 +21,19 @@ namespace WPFDialogChecker
                 //     "Testknoten", "Testknoten", null, NodeLogicalState.None, null, null));
                 //logicalResult = wpfDialogChecker.Run("true", new TreeParameters("MainTree", null), new TreeEvent("Testknoten", "Testknoten", "Testknoten",
                 //     "Testknoten","Testknoten", null, NodeLogicalState.None, null, null));
-                logicalResult = wpfDialogChecker.Run("---", new TreeParameters("MainTree", null), new TreeEvent("Testknoten", "Testknoten", "Testknoten",
+                Window parentViewDummy = new Window
+                {
+                    Width = 0,
+                    Height = 0,
+                    ShowInTaskbar = false,
+                    WindowStyle = WindowStyle.None,
+                    WindowStartupLocation = WindowStartupLocation.CenterScreen,
+                    AllowsTransparency = true,
+                    Opacity = 0,
+                    Content = ""
+                };
+                parentViewDummy.Show();
+                logicalResult = wpfDialogChecker.Run("---", new TreeParameters("MainTree", parentViewDummy), new TreeEvent("Testknoten", "Testknoten", "Testknoten",
                      "Testknoten", "Testknoten", null, NodeLogicalState.None, null, null));
                 MessageBox.Show(String.Format("Result: {0}, ReturnObject: {1}", logicalResult.ToString(),
                     ((wpfDialogChecker.ReturnObject) ?? "null").ToString()));

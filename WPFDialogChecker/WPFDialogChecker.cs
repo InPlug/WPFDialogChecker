@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Windows;
-using NetEti.Globals;
 using NetEti.ApplicationControl;
 using Vishnu.Interchange;
 using WPFDialogChecker.ViewModel;
@@ -71,24 +70,24 @@ namespace WPFDialogChecker
             bool? logicalResult = null;
             bool showDialog = true;
             string? para = checkerParameters?.ToString()?.Trim().ToLower();
-            if ((new string[] { "exception", "true", "false", "null" }).Contains(para))
+            if (isFirstRun)
             {
-                switch (para)
+                if ((new string[] { "exception", "true", "false", "null" }).Contains(para))
                 {
-                    case "exception":
-                        applicationException = new ApplicationException("User clicked on 'Exception'.");
-                        break;
-                    case "true":
-                        logicalResult = true;
-                        break;
-                    case "false":
-                        logicalResult = false;
-                        break;
-                    default:
-                        break;
-                }
-                if (isFirstRun)
-                {
+                    switch (para)
+                    {
+                        case "exception":
+                            applicationException = new ApplicationException("User clicked on 'Exception'.");
+                            break;
+                        case "true":
+                            logicalResult = true;
+                            break;
+                        case "false":
+                            logicalResult = false;
+                            break;
+                        default:
+                            break;
+                    }
                     showDialog = false;
                 }
             }
@@ -118,11 +117,17 @@ namespace WPFDialogChecker
                 if (this._mainBusinessLogicViewModel.LastException != null)
                 {
                     applicationException = this._mainBusinessLogicViewModel.LastException;
+                    this.ReturnObject = "Ergebnis: " + this._mainBusinessLogicViewModel.LastException.Message;
                 }
                 else
                 {
                     logicalResult = this._mainBusinessLogic.LogicalState;
+                    this.ReturnObject = "Ergebnis: " + (logicalResult == null ? "---": logicalResult.ToString());
                 }
+            }
+            else
+            {
+                this.ReturnObject = "Parameter: " + checkerParameters?.ToString();
             }
 
             this.OnNodeProgressChanged(100);
@@ -147,8 +152,6 @@ namespace WPFDialogChecker
                     InfoController.Say("User clicked null");
                 }
             }
-            this.ReturnObject = "Parameter: " + checkerParameters?.ToString();
-
             this._mainWindow = null;
             this._mainWindowViewModel = null;
             this._mainBusinessLogicViewModel = null;
